@@ -17,7 +17,9 @@ flatbuffers==25.12.19
 fonttools==4.62.1
     # via matplotlib
 joblib==1.5.3
-    # via scikit-learn
+    # via
+    #   -r requirements.in
+    #   scikit-learn
 kiwisolver==1.5.0
     # via matplotlib
 matplotlib==3.10.8
