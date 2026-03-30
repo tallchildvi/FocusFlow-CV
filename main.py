@@ -13,7 +13,7 @@ from mediapipe.tasks.python.vision.face_landmarker import (
 from utils.draw_landmarks import draw_landmarks
 from utils.draw_eye_boxes import draw_eye_boxes
 from utils.draw_gaze_vectors import draw_gaze_vectors
-from utils.get_ear_index import get_ear
+from utils.get_features import extract_features
 from data.data_collector import FocusDataCollector
 import joblib
 
