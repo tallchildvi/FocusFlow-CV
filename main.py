@@ -13,8 +13,25 @@ from mediapipe.tasks.python.vision.face_landmarker import (
 from utils.draw_landmarks import draw_landmarks
 from utils.draw_eye_boxes import draw_eye_boxes
 from utils.draw_gaze_vectors import draw_gaze_vectors
+from utils.get_ear_index import get_ear
 from data.data_collector import FocusDataCollector
+import joblib
+
+
 model_path=r"C:\Users\Andrew\Documents\projects\FocusFlow-CV\models\face_landmarker_v2_with_blendshapes.task"
+svm_model_path=r"C:\Users\Andrew\Documents\projects\FocusFlow-CV\data\focus_svm_model.pkl"
+scaler_path=r'C:\Users\Andrew\Documents\projects\FocusFlow-CV\data\scaler.pkl'
+try:
+    clf = joblib.load(svm_model_path)
+except:
+    print(f'Cannot load model from file: {svm_model_path}')
+    exit()
+
+try:
+    scaler = joblib.load(scaler_path)
+except:
+    print(f'Cannot load scaler from: {scaler_path}')
+    exit()
 
 latest_result = None
 def print_result(result, output_image, timestanp_ms):
