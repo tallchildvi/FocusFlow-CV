@@ -100,4 +100,4 @@ python main.py
 
 ---
 
-*Developed by Andrii (tallchildvi), 2nd year Software Engineering student at Taras Shevchenko National University of Kyiv (KNU).*
+*Developed by Levashov Andrii (tallchildvi), 2nd year Software Engineering student at Taras Shevchenko National University of Kyiv (KNU).*
