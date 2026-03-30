@@ -12,6 +12,8 @@ from mediapipe.tasks.python.vision.face_landmarker import (
 )
 from utils.draw_landmarks import draw_landmarks
 from utils.draw_eye_boxes import draw_eye_boxes
+from utils.draw_gaze_vectors import draw_gaze_vectors
+from data.data_collector import FocusDataCollector
 model_path=r"C:\Users\Andrew\Documents\projects\FocusFlow-CV\face_landmarker_v2_with_blendshapes.task"
 
 latest_result = None
@@ -31,6 +33,7 @@ detector = FaceLandmarker.create_from_options(options)
 
 
 cap = cv2.VideoCapture(0)
+collector = FocusDataCollector()
 
 print("Press 'q' to quit")
 
@@ -47,15 +50,29 @@ while True:
 
 
     if latest_result:
-        # frame = draw_landmarks(frame, latest_result)
-        frame = draw_eye_boxes(frame, latest_result)
+        frame = draw_landmarks(frame, latest_result)
+        # frame = draw_eye_boxes(frame, latest_result)
+        # frame = draw_gaze_vectors(frame, latest_result)
         cv2.putText(frame, f"Faces: {len(latest_result.face_landmarks)}", 
                     (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
 
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-        break
-
     cv2.imshow("AI Monitor", frame)
+
+    key = cv2.waitKey(1) & 0xFF
+    # Focus
+    if key == ord('f'):
+        if collector.collect(latest_result, 1):
+            print("Captured: FOCUS")
+    # Away
+    elif key == ord('a'): 
+        if collector.collect(latest_result, 0):
+            print("Captured: AWAY")
+    # Save
+    elif key == ord('s'):
+        collector.save_to_csv()
+    # Quit
+    elif key == ord('q'):
+        break
 
 detector.close()
 cap.release()
