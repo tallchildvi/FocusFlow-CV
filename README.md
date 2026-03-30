@@ -64,9 +64,7 @@ To obtain a robust performance metric, **Dataset Decimation** was applied:
 ```
 FocusFlow-CV/
 ├── models/                 # Pre-trained SVM weights and MediaPipe .task files
-├── utils/                  
-│   ├── get_features.py     # 3D Matrix & EAR extraction logic
-│   ├── draw_utils.py       # Landmark & Status visualization
+├── utils/                  # Utilities scripts
 ├── data/                   # Data collection and CSV processing scripts
 ├── main.py                 # Live inference script with Confidence Buffer logic
 └── requirements.txt        # Project dependencies
@@ -78,7 +76,7 @@ FocusFlow-CV/
 
 1. **Personalized Calibration:** Implementing a "calibration phase" at startup to adapt the model to a user's unique facial anatomy.
 2. **Dataset Expansion:** Diversifying data with varying lighting conditions and eyewear.
-3. **ONNX Export:** Converting the SVM model for ultra-fast browser or mobile deployment.
+
 
 ---
 
