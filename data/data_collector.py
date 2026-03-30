@@ -30,18 +30,22 @@ class FocusDataCollector:
             x_rel = (iris.x - inner.x) / (outer.x - inner.x)
             y_rel = (iris.y - inner.y) / (outer.y - inner.y)
             return [x_rel, y_rel]
-
-        eye_features = get_rel_eye(468, 133, 33) + get_rel_eye(473, 362, 263)
-
+        
+        eye_rel = get_rel_eye(468, 133, 33) + get_rel_eye(473, 362, 263)
+        
+        ear_l = self.get_ear(landmarks, [33, 160, 158, 133, 153, 144])
+        ear_r = self.get_ear(landmarks, [362, 385, 387, 263, 373, 380])
         matrix_features = matrix.flatten().tolist()
 
-        final_vector = eye_features + matrix_features
+        head_pose = matrix.flatten().tolist()
+
+        features = eye_rel + [ear_l, ear_r] + head_pose
         
-        self.data.append(final_vector)
+        self.data.append(features)
         self.labels.append(label)
         return True
 
-    def save_to_csv(self, filename="focus_dataset.csv"):
+    def save_to_csv(self, filename="data/focus_dataset.csv"):
         df = pd.DataFrame(self.data)
         df['label'] = self.labels
         df.to_csv(filename, index=False)

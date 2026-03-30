@@ -14,7 +14,7 @@ from utils.draw_landmarks import draw_landmarks
 from utils.draw_eye_boxes import draw_eye_boxes
 from utils.draw_gaze_vectors import draw_gaze_vectors
 from data.data_collector import FocusDataCollector
-model_path=r"C:\Users\Andrew\Documents\projects\FocusFlow-CV\face_landmarker_v2_with_blendshapes.task"
+model_path=r"C:\Users\Andrew\Documents\projects\FocusFlow-CV\models\face_landmarker_v2_with_blendshapes.task"
 
 latest_result = None
 def print_result(result, output_image, timestanp_ms):
