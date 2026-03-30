@@ -11,6 +11,7 @@ from mediapipe.tasks.python.vision.face_landmarker import (
     FaceLandmarkerOptions
 )
 from utils.draw_landmarks import draw_landmarks
+from utils.draw_eye_boxes import draw_eye_boxes
 model_path=r"C:\Users\Andrew\Documents\projects\FocusFlow-CV\face_landmarker_v2_with_blendshapes.task"
 
 latest_result = None
@@ -46,7 +47,8 @@ while True:
 
 
     if latest_result:
-        frame = draw_landmarks(frame, latest_result)
+        # frame = draw_landmarks(frame, latest_result)
+        frame = draw_eye_boxes(frame, latest_result)
         cv2.putText(frame, f"Faces: {len(latest_result.face_landmarks)}", 
                     (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
 
