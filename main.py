@@ -1,5 +1,7 @@
 import cv2
 import time
+import os
+from pathlib import Path
 import mediapipe as mp
 from mediapipe.tasks import python
 from mediapipe.tasks.python.core.base_options import (
@@ -18,10 +20,10 @@ from data.data_collector import FocusDataCollector
 import joblib
 import pandas as pd
 
-
-model_path=r"C:\Users\Andrew\Documents\projects\FocusFlow-CV\models\face_landmarker_v2_with_blendshapes.task"
-svm_model_path=r"C:\Users\Andrew\Documents\projects\FocusFlow-CV\models\focus_svm_model.pkl"
-scaler_path=r'C:\Users\Andrew\Documents\projects\FocusFlow-CV\models\scaler.pkl'
+BASE_DIR = Path(__file__).resolve().parent
+model_path = str(BASE_DIR / "models" / "face_landmarker_v2_with_blendshapes.task")
+svm_model_path = str(BASE_DIR / "models" / "focus_svm_model.pkl")
+scaler_path = str(BASE_DIR / "models" / "scaler.pkl")
 try:
     clf = joblib.load(svm_model_path)
 except:
@@ -53,7 +55,7 @@ detector = FaceLandmarker.create_from_options(options)
 
 
 cap = cv2.VideoCapture(0)
-away_counter = 0  # Буфер впевненості
+away_counter = 0 
 AWAY_THRESHOLD = 50
 print("Press 'q' to quit")
 
