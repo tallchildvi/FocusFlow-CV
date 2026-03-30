@@ -1,6 +1,5 @@
 from utils.get_ear_index import get_ear
 def extract_features(landmarks, matrix):
-    # Відносні координати зіниць
     def get_rel_eye(iris_idx, inner_idx, outer_idx):
         iris, inner, outer = landmarks[iris_idx], landmarks[inner_idx], landmarks[outer_idx]
         return [(iris.x - inner.x) / (outer.x - inner.x), 

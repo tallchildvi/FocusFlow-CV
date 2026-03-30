@@ -16,7 +16,6 @@ from utils.draw_gaze_vectors import draw_gaze_vectors
 from utils.get_features import extract_features
 from data.data_collector import FocusDataCollector
 import joblib
-import pandas as pd
 
 
 model_path=r"C:\Users\Andrew\Documents\projects\FocusFlow-CV\models\face_landmarker_v2_with_blendshapes.task"
@@ -35,9 +34,7 @@ except:
     exit()
 
 latest_result = None
-last_timestamp_ms = 0
-
-def print_result(result, output_image, timestamp_ms):
+def print_result(result, output_image, timestanp_ms):
     global latest_result
     latest_result = result
 
@@ -53,8 +50,8 @@ detector = FaceLandmarker.create_from_options(options)
 
 
 cap = cv2.VideoCapture(0)
-away_counter = 0  # Буфер впевненості
-AWAY_THRESHOLD = 50
+collector = FocusDataCollector()
+
 print("Press 'q' to quit")
 
 while True:
@@ -66,50 +63,32 @@ while True:
     rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
     mp_image = mp.Image(image_format=mp.ImageFormat.SRGB, data=rgb_frame)
     timestamp_ms = int(time.time() * 1000)
-    if timestamp_ms <= last_timestamp_ms:
-        timestamp_ms = last_timestamp_ms + 1
-    last_timestamp_ms = timestamp_ms
-    
     detector.detect_async(mp_image, timestamp_ms)
 
-    current_result = latest_result 
-    color = (255, 255, 255)
 
-    if current_result and current_result.face_landmarks and current_result.facial_transformation_matrixes:
-        frame = draw_landmarks(frame, current_result)
-        
-        landmarks = current_result.face_landmarks[0]
-        matrix = current_result.facial_transformation_matrixes[0]
-
-        features = extract_features(landmarks, matrix) 
-
-        feature_names = [str(i) for i in range(len(features))]
-        features_df = pd.DataFrame([features], columns=feature_names)
-        features_scaled = scaler.transform(features_df)
-        prediction = clf.predict(features_scaled)[0]
-
-        if prediction == 0: 
-            away_counter += 1
-        else: 
-            away_counter = max(0, away_counter - 3) 
-
-        if away_counter > AWAY_THRESHOLD:
-            status_text = "AWAY"
-            color = (0, 0, 255)
-        else:
-            status_text = "FOCUSING"
-            color = (0, 255, 0)
-        
-        cv2.putText(frame, f"STATUS: {status_text}", 
-                    (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, color, 2)
-    else:
-        away_counter = min(AWAY_THRESHOLD + 1, away_counter + 1)
+    if latest_result:
+        frame = draw_landmarks(frame, latest_result)
+        # frame = draw_eye_boxes(frame, latest_result)
+        # frame = draw_gaze_vectors(frame, latest_result)
+        cv2.putText(frame, f"Faces: {len(latest_result.face_landmarks)}", 
+                    (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
 
     cv2.imshow("AI Monitor", frame)
 
     key = cv2.waitKey(1) & 0xFF
-
-    if key == ord('q'):
+    # Focus
+    if key == ord('f'):
+        if collector.collect(latest_result, 1):
+            print("Captured: FOCUS")
+    # Away
+    elif key == ord('a'): 
+        if collector.collect(latest_result, 0):
+            print("Captured: AWAY")
+    # Save
+    elif key == ord('s'):
+        collector.save_to_csv()
+    # Quit
+    elif key == ord('q'):
         break
 
 detector.close()
