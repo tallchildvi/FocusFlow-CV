@@ -84,7 +84,7 @@ FocusFlow-CV/
 
 **1. Clone the repository:**
 ```bash
-git clone https://github.com/yourusername/FocusFlow-CV.git
+git clone https://github.com/tallchildvi/FocusFlow-CV.git
 cd FocusFlow-CV
 ```
 
